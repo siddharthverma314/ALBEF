@@ -1,11 +1,13 @@
-train_file: ['data/coco.json',
-               'data/vg.json',
-               'data/cc12m.json',
-               'data/cc3m_train.json',
-               'data/cc3m_val.json',
-               'data/sbu.json'               
-               ]
-# each train_file (json) contains a python list where each item is {'image': img_path, 'caption': text or list_of_text }               
+# each train_file (json) contains a python list where each item is
+# {'image': img_path, 'caption': text or list_of_text}. I have not
+# included cc3m since it is not available on the cluster.
+train_file:
+  - data/coco.json
+  - data/vg.json
+  - data/cc12m.json
+  - data/sbu.json
+
+# model config
 bert_config: 'configs/config_bert.json'
 
 image_res: 256
@@ -18,12 +20,17 @@ queue_size: 65536
 momentum: 0.995
 alpha: 0.4
 
-optimizer: {opt: adamW, lr: 1e-4, weight_decay: 0.02}
-schedular: {sched: cosine, lr: 1e-4, epochs: 30, min_lr: 1e-5, decay_rate: 1, warmup_lr: 1e-5, warmup_epochs: 20, cooldown_epochs: 0}
+optimizer:
+  opt: adamW
+  lr: 1e-4
+  weight_decay: 0.02
 
-
-
-
-
-
-
+schedular:
+  sched: cosine
+  lr: 1e-4
+  epochs: 30
+  min_lr: 1e-5
+  decay_rate: 1
+  warmup_lr: 1e-5
+  warmup_epochs: 20
+  cooldown_epochs: 0
