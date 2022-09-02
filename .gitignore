@@ -1,2 +1,8 @@
 .direnv
 .envrc
+__pycache__/
+slurm-*.out
+
+## albef outputs
+Pretrain/
+output/

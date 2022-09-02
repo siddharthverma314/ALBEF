@@ -3,9 +3,9 @@
 # included cc3m since it is not available on the cluster.
 train_file:
   - data/coco.json
-  - data/vg.json
-  - data/cc12m.json
-  - data/sbu.json
+  # - data/vg.json
+  # - data/cc12m.json
+  # - data/sbu.json
 
 # model config
 bert_config: 'configs/config_bert.json'

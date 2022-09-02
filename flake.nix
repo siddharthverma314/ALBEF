@@ -16,28 +16,43 @@
           { baseLibraryPath = "/usr/lib/x86_64-linux-gnu"; }
           ''
             mkdir -p $out
-            libs=($baseLibraryPath/libcuda.so* $baseLibraryPath/libnvidia*.so*)
+            libs=($baseLibraryPath/libcuda.so* $baseLibraryPath/libnvidia*.so* $baseLibraryPath/libGL*)
             for lib in ''${libs[@]}; do
               ln -s $lib $out
             done
           '';
+        haskell = pkgs.ghc.withPackages (ps: with ps; [
+          aeson
+          parallel
+          monad-parallel
+          JuicyPixels
+          terminal-progress-bar
+        ]);
+        python = pkgs.python39.withPackages (ps: with ps; [ pip setuptools ]);
       in
       {
         devShell = with pkgs; mkShellNoCC {
           packages = [
-            rnix-lsp
-            nodePackages.pyright
-            (python311.withPackages (ps: with ps; [ pip setuptools ]))
             cuda
+            haskell
+            haskell-language-server
+            pyright
+            python
+            rnix-lsp
             yaml-language-server
           ];
-          LD_LIBRARY_PATH = lib.concatStringsSep ":" [
-            "${cuda}/lib"
-            "${cuda}/lib64"
-            "${zlib}/lib"
-            "${stdenv.cc.cc.lib}/lib"
-            opengl-libraries
-          ];
+          LD_LIBRARY_PATH = "${cuda}/lib64:${opengl-libraries}:" +
+            lib.makeLibraryPath [
+              cuda
+              zlib
+              stdenv.cc.cc.lib
+              glib.out
+              xorg.libX11
+              xorg.libXext
+              xorg.libxcb
+              xorg.libXau
+              xorg.libXdmcp
+            ];
         };
       }
     );
